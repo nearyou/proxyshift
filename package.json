@@ -1,0 +1,15 @@
+{
+  "name": "proxyshift",
+  "version": "1.0.0",
+  "description": "A browser extension for connecting proxies with anti-detection and timezone spoofing.",
+  "scripts": {
+    "icons": "node scripts/generate-icons.js",
+    "build": "node scripts/generate-icons.js && node scripts/package.js",
+    "zip:chrome": "node scripts/package.js chrome",
+    "zip:firefox": "node scripts/package.js firefox"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}
