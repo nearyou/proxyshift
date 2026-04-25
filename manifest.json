@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "ProxyShift",
+  "version": "1.0.0",
+  "description": "Connect to any proxy (HTTP/HTTPS/SOCKS4/SOCKS5), spoof timezone, and stay undetectable. Supports profiles, rotation, and anti-fingerprinting.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_title": "ProxyShift"
+  },
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/anti-detect.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    }
+  ],
+  "options_page": "options/options.html",
+  "permissions": [
+    "proxy",
+    "storage",
+    "alarms",
+    "webRequest",
+    "webRequestAuthProvider",
+    "tabs",
+    "scripting",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}
