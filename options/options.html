@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProxyShift — Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body class="theme-dark" id="app">
+
+  <div class="container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor" opacity="0.2"/>
+          <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="3" fill="currentColor"/>
+        </svg>
+        <span>ProxyShift</span>
+      </div>
+      <ul class="nav-list">
+        <li><a class="nav-item active" href="#" data-section="proxies">Proxy Profiles</a></li>
+        <li><a class="nav-item" href="#" data-section="antidect">Anti-Detection</a></li>
+        <li><a class="nav-item" href="#" data-section="rotation">Rotation</a></li>
+        <li><a class="nav-item" href="#" data-section="importexport">Import / Export</a></li>
+        <li><a class="nav-item" href="#" data-section="appearance">Appearance</a></li>
+        <li><a class="nav-item" href="#" data-section="about">About</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- ── Proxy Profiles ─── -->
+      <section id="section-proxies" class="section active">
+        <div class="section-head">
+          <div>
+            <h1 class="section-title">Proxy Profiles</h1>
+            <p class="section-sub">Add and manage your proxy connections.</p>
+          </div>
+          <button class="btn-primary" id="addProxyBtn">+ Add Proxy</button>
+        </div>
+        <div id="proxyTableWrap">
+          <div class="empty-block" id="proxyEmptyState">
+            <p>No proxy profiles yet. Click <strong>Add Proxy</strong> to get started.</p>
+          </div>
+          <table class="proxy-table" id="proxyTable" style="display:none">
+            <thead>
+              <tr>
+                <th>Name</th><th>Type</th><th>Host</th><th>Port</th><th>Auth</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="proxyTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── Anti-Detection ─── -->
+      <section id="section-antidect" class="section">
+        <div class="section-head">
+          <div>
+            <h1 class="section-title">Anti-Detection</h1>
+            <p class="section-sub">Configure stealth features to prevent fingerprinting.</p>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">WebRTC Leak Prevention</span>
+              <span class="setting-desc">Blocks WebRTC from exposing your real local IP address to websites.</span>
+            </div>
+            <label class="switch" id="webrtcToggle">
+              <input type="checkbox" id="webrtcCheck" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">Language / Locale Spoofing</span>
+              <span class="setting-desc">Overrides navigator.language and navigator.languages to match the proxy region.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="localeCheck" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row locale-sub" id="localeSubRow">
+            <div class="setting-info">
+              <span class="setting-name">Locale Override</span>
+              <span class="setting-desc">Set to "auto" to detect from proxy IP, or enter a BCP 47 locale (e.g. en-US, fr-FR).</span>
+            </div>
+            <input type="text" class="setting-input" id="localeInput" placeholder="auto" />
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">Timezone Spoofing</span>
+              <span class="setting-desc">Overrides Intl.DateTimeFormat and Date.prototype.getTimezoneOffset.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="timezoneCheck" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row tz-sub" id="tzSubRow">
+            <div class="setting-info">
+              <span class="setting-name">Timezone Override</span>
+              <span class="setting-desc">Set to "auto" to detect from proxy IP, or enter an IANA timezone (e.g. America/New_York).</span>
+            </div>
+            <input type="text" class="setting-input" id="timezoneInput" placeholder="auto" />
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">Canvas Fingerprint Noise</span>
+              <span class="setting-desc">Adds imperceptible noise to canvas rendering to break canvas fingerprinting.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="canvasCheck" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="saveAntiDetectBtn">Save Settings</button>
+      </section>
+
+      <!-- ── Rotation ─── -->
+      <section id="section-rotation" class="section">
+        <div class="section-head">
+          <div>
+            <h1 class="section-title">Proxy Rotation</h1>
+            <p class="section-sub">Automatically cycle through proxy profiles on a timer.</p>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">Enable Rotation</span>
+              <span class="setting-desc">Cycle through all enabled profiles automatically.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="rotationCheck" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row" id="rotationIntervalRow">
+            <div class="setting-info">
+              <span class="setting-name">Rotation Interval</span>
+              <span class="setting-desc">How often to switch proxies (in minutes). Minimum: 1 minute.</span>
+            </div>
+            <div class="number-input-wrap">
+              <input type="number" class="setting-input narrow" id="rotationInterval" min="1" max="1440" value="10" />
+              <span class="unit-label">min</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="saveRotationBtn">Save Rotation</button>
+      </section>
+
+      <!-- ── Import / Export ─── -->
+      <section id="section-importexport" class="section">
+        <div class="section-head">
+          <div>
+            <h1 class="section-title">Import / Export</h1>
+            <p class="section-sub">Back up or share your proxy profiles as JSON.</p>
+          </div>
+        </div>
+
+        <div class="io-grid">
+          <div class="io-card">
+            <h3>Export Profiles</h3>
+            <p>Download all proxy profiles as a JSON file.</p>
+            <button class="btn-secondary" id="exportBtn">Export JSON</button>
+          </div>
+          <div class="io-card">
+            <h3>Import Profiles</h3>
+            <p>Load proxy profiles from a JSON file. Existing profiles with the same ID will be updated.</p>
+            <label class="btn-secondary file-label">
+              Import JSON
+              <input type="file" accept=".json" id="importFile" style="display:none" />
+            </label>
+          </div>
+        </div>
+
+        <div class="io-notice" id="ioNotice"></div>
+
+        <div class="io-card" style="margin-top:16px">
+          <h3>Quick Import — Plain Text</h3>
+          <p>Paste proxies in format: <code>type://host:port</code> or <code>type://user:pass@host:port</code>, one per line.</p>
+          <textarea class="setting-textarea" id="plainTextImport" placeholder="socks5://1.2.3.4:1080&#10;http://user:pass@proxy.example.com:8080&#10;https://5.6.7.8:3128"></textarea>
+          <button class="btn-secondary" id="importPlainBtn" style="margin-top:8px">Import Lines</button>
+        </div>
+      </section>
+
+      <!-- ── Appearance ─── -->
+      <section id="section-appearance" class="section">
+        <div class="section-head">
+          <div>
+            <h1 class="section-title">Appearance</h1>
+            <p class="section-sub">Customize the look of ProxyShift.</p>
+          </div>
+        </div>
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-name">Theme</span>
+            </div>
+            <select class="setting-select" id="themeSelect">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" id="saveAppearanceBtn">Save Appearance</button>
+      </section>
+
+      <!-- ── About ─── -->
+      <section id="section-about" class="section">
+        <div class="section-head">
+          <div>
+            <h1 class="section-title">About ProxyShift</h1>
+          </div>
+        </div>
+        <div class="about-card">
+          <p><strong>Version:</strong> 1.0.0</p>
+          <p><strong>License:</strong> MIT</p>
+          <p style="margin-top:8px">ProxyShift is an open-source browser extension for connecting to HTTP, HTTPS, SOCKS4, and SOCKS5 proxies with optional authentication, timezone spoofing, and anti-detection features.</p>
+          <p style="margin-top:12px">
+            <a href="https://github.com/your-username/proxyshift" target="_blank" rel="noopener" class="about-link">GitHub Repository</a>
+          </p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Add / Edit Proxy Modal (reused from popup) -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add Proxy</h2>
+        <button class="icon-btn" id="closeModalBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="profileId" />
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input class="form-input" type="text" id="profileName" placeholder="e.g. US Residential" />
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="width:110px">
+            <label class="form-label">Type</label>
+            <select class="form-input" id="proxyType">
+              <option value="http">HTTP</option>
+              <option value="https">HTTPS</option>
+              <option value="socks4">SOCKS4</option>
+              <option value="socks5" selected>SOCKS5</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label">Host / IP</label>
+            <input class="form-input" type="text" id="proxyHost" placeholder="proxy.example.com" />
+          </div>
+          <div class="form-group" style="width:90px">
+            <label class="form-label">Port</label>
+            <input class="form-input" type="number" id="proxyPort" placeholder="1080" />
+          </div>
+        </div>
+        <div class="form-divider"><span>Authentication (optional)</span></div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label">Username</label>
+            <input class="form-input" type="text" id="proxyUser" placeholder="username" autocomplete="off" />
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" id="proxyPass" placeholder="••••••••" autocomplete="off" />
+          </div>
+        </div>
+        <div class="modal-error" id="modalError"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="cancelModalBtn">Cancel</button>
+        <button class="btn-primary" id="saveProfileBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
