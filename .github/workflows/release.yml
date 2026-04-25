@@ -1,0 +1,66 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate icons
+        working-directory: proxyshift
+        run: node scripts/generate-icons.js
+
+      - name: Build distribution ZIPs
+        working-directory: proxyshift
+        run: node scripts/package.js
+
+      - name: List build artifacts
+        run: ls -la proxyshift/dist/
+
+      - name: Upload Chrome ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxyshift-chrome
+          path: proxyshift/dist/proxyshift-chrome-*.zip
+
+      - name: Upload Firefox ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxyshift-firefox
+          path: proxyshift/dist/proxyshift-firefox-*.zip
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            proxyshift/dist/proxyshift-chrome-*.zip
+            proxyshift/dist/proxyshift-firefox-*.zip
+          body: |
+            ## ProxyShift ${{ github.ref_name }}
+
+            ### Installation
+            
+            **Chrome / Edge / Brave:**
+            1. Download `proxyshift-chrome-*.zip`
+            2. Extract the ZIP
+            3. Go to `chrome://extensions` → Enable Developer Mode → Load unpacked → select the extracted folder
+            
+            **Firefox:**
+            1. Download `proxyshift-firefox-*.zip`
+            2. Go to `about:debugging#/runtime/this-firefox` → Load Temporary Add-on → select the ZIP
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
