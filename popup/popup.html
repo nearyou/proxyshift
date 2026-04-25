@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProxyShift</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body class="theme-dark" id="app">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor" opacity="0.2"/>
+        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="12" cy="12" r="3" fill="currentColor"/>
+      </svg>
+      <span class="app-name">ProxyShift</span>
+    </div>
+    <div class="header-right">
+      <div class="toggle-container" id="masterToggle" title="Enable / Disable Proxy">
+        <div class="toggle-track">
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label" id="masterLabel">OFF</span>
+      </div>
+      <button class="icon-btn" id="settingsBtn" title="Settings">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+          <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Status Bar -->
+  <div class="status-bar" id="statusBar">
+    <div class="status-indicator" id="statusIndicator"></div>
+    <span class="status-text" id="statusText">No proxy active</span>
+    <button class="ip-btn" id="refreshIpBtn" title="Refresh IP">
+      <svg viewBox="0 0 20 20" fill="currentColor" width="12" height="12">
+        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Profile List -->
+  <div class="profiles-section">
+    <div class="section-header">
+      <span class="section-title">Proxy Profiles</span>
+      <button class="add-btn" id="addProfileBtn">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+        </svg>
+        Add
+      </button>
+    </div>
+
+    <div class="profiles-list" id="profilesList">
+      <div class="empty-state" id="emptyState">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+        </svg>
+        <p>No proxy profiles yet.<br/>Click <strong>Add</strong> to get started.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-ip" id="footerIp">
+      <svg viewBox="0 0 20 20" fill="currentColor" width="12" height="12" opacity="0.5">
+        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+      </svg>
+      <span id="currentIpText">—</span>
+    </div>
+    <button class="text-btn" id="openOptionsBtn">Options</button>
+  </footer>
+
+  <!-- Add / Edit Profile Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="profileModal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add Proxy</h2>
+        <button class="icon-btn" id="closeModalBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="profileId" />
+
+        <div class="form-group">
+          <label class="form-label" for="profileName">Name</label>
+          <input class="form-input" type="text" id="profileName" placeholder="e.g. US Residential" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label" for="proxyType">Type</label>
+            <select class="form-select" id="proxyType">
+              <option value="http">HTTP</option>
+              <option value="https">HTTPS</option>
+              <option value="socks4">SOCKS4</option>
+              <option value="socks5" selected>SOCKS5</option>
+            </select>
+          </div>
+          <div class="form-group flex-3">
+            <label class="form-label" for="proxyHost">Host / IP</label>
+            <input class="form-input" type="text" id="proxyHost" placeholder="proxy.example.com" />
+          </div>
+          <div class="form-group" style="width:80px">
+            <label class="form-label" for="proxyPort">Port</label>
+            <input class="form-input" type="number" id="proxyPort" placeholder="1080" min="1" max="65535" />
+          </div>
+        </div>
+
+        <div class="form-divider">
+          <span>Authentication (optional)</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label" for="proxyUser">Username</label>
+            <input class="form-input" type="text" id="proxyUser" placeholder="username" autocomplete="off" />
+          </div>
+          <div class="form-group flex-1">
+            <label class="form-label" for="proxyPass">Password</label>
+            <input class="form-input" type="password" id="proxyPass" placeholder="••••••••" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="modal-error" id="modalError"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="cancelModalBtn">Cancel</button>
+        <button class="btn-test" id="testProxyBtn">
+          <span id="testBtnText">Test</span>
+        </button>
+        <button class="btn-primary" id="saveProfileBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
