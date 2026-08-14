@@ -220,7 +220,7 @@ proxyshift/
 
 ## Contributing
 
-Pull requests are welcome! Please open an issue first for significant changes.
+Pull requests are welcome! Please open an issue first for significant changes
 
 ```bash
 git clone https://github.com/kakarot-oncloud/proxyshift.git
