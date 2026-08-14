@@ -1,4 +1,4 @@
-<div align="center"> 
+<div align="center">
 
 <img src="icons/icon128.png" width="80" alt="ProxyShift Logo" />
 
